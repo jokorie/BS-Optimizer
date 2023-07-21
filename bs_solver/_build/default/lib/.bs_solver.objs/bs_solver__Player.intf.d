@@ -1,1 +1,1 @@
-lib/player.pp.mli: Base Card Fieldslib Game_state
+lib/player.pp.mli: Base Card Fieldslib

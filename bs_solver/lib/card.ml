@@ -11,6 +11,8 @@ module Suit = struct
   end
 
   include T
+  include Comparable.Make (T)
+  include Hashable.Make (T)
 end
 
 module Rank = struct
@@ -31,8 +33,9 @@ module Rank = struct
       | King
     [@@deriving sexp, compare, hash]
   end
-
   include T
+  include Comparable.Make (T)
+  include Hashable.Make (T)
 end
 
 type t =

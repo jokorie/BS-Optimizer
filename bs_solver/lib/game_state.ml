@@ -4,8 +4,9 @@ type t =
   { mutable round_num : int
   ; player_count : int
   ; mutable pot : Card.t list
+  ; all_players : Player.t Int.Table.t
   }
-[@@deriving fields, sexp, compare]
+[@@deriving fields, sexp]
 
 let card_on_turn t =
   match t.round_num % 13 with

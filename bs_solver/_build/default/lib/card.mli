@@ -24,6 +24,7 @@ module Rank : sig
     | Jack
     | Queen
     | King
+    [@@deriving sexp, compare, hash]
 end
 
 type t =

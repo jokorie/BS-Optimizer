@@ -3,6 +3,9 @@
 (** @canonical Bs_solver.Card *)
 module Card = Bs_solver__Card
 
+(** @canonical Bs_solver.Game *)
+module Game = Bs_solver__Game
+
 (** @canonical Bs_solver.Game_state *)
 module Game_state = Bs_solver__Game_state
 
@@ -11,3 +14,6 @@ module Opponent = Bs_solver__Opponent
 
 (** @canonical Bs_solver.Player *)
 module Player = Bs_solver__Player
+
+(** @canonical Bs_solver.Util_functions *)
+module Util_functions = Bs_solver__Util_functions

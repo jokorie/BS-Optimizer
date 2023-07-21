@@ -4,6 +4,7 @@ type t =
   { mutable round_num : int
   ; player_count : int
   ; mutable pot : Card.t list
+  ; all_players : Player.t list
   }
 [@@deriving fields, sexp, compare]
 
