@@ -29,12 +29,28 @@ let card_on_turn num =
   | _ -> failwith "Invalid round!"
 ;;
 
+let chop_win_seq sequence =
+  let seq, _ =
+    List.fold
+      sequence
+      ~init:([], [])
+      ~f:(fun (built, pending) (rank, count) ->
+        match count with
+        | 0 -> built, pending @ [ rank, count ]
+        | _ -> built @ pending @ [ rank, count ], [])
+  in
+  seq
+;;
+
 let calc_win_cycle t ~(game_state : Game_state.t) =
   (* id should start at 0 if round starts at 1 *)
   let current_turn = game_state.round_num + t.id in
-  List.init 13 ~f:(fun cycle_count ->
-    let rank =
-      card_on_turn (current_turn + (game_state.player_count * cycle_count))
-    in
-    rank, Hashtbl.find_exn t.my_cards rank)
+  let full_cycle =
+    List.init 13 ~f:(fun cycle_count ->
+      let rank =
+        card_on_turn (current_turn + (game_state.player_count * cycle_count))
+      in
+      rank, Hashtbl.find_exn t.my_cards rank)
+  in
+  chop_win_seq full_cycle
 ;;
