@@ -28,6 +28,7 @@ let card_on_turn num =
 ;;
 
 let calc_win_cycle t ~(game_state : Game_state.t) =
+  (* id should start at 0 if round starts at 1 *)
   let current_turn = game_state.round_num + t.id in
   List.init 13 ~f:(fun cycle_count ->
     card_on_turn (current_turn + (game_state.player_count * cycle_count)))

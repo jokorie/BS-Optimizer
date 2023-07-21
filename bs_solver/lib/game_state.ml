@@ -3,7 +3,7 @@ open! Core
 type t =
   { mutable round_num : int
   ; player_count : int
-  ; mutable pot_size : int
+  ; mutable pot : Card.t list
   }
 [@@deriving fields, sexp, compare]
 
