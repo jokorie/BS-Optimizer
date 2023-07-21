@@ -5,6 +5,6 @@ type t =
   ; mutable bluffs_completed : int
   ; mutable my_cards : Card.t list
   }
-[@@deriving sexp_of, compare, fields]
+[@@deriving fields]
 
-val calc_win_cycle : t -> game_state:Game_state.t -> Card.Rank.t list
+val calc_win_cycle : t -> game_state:Game_state.t -> (Card.Rank.t * int) list

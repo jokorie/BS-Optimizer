@@ -1,13 +1,15 @@
 open! Core
 
 type t =
-  { id : int (* represent position as well *)
+  { (* maybe have two cases: Me & Opponent*)
+    id : int (* represent position as well *)
   ; mutable hand_size : int
   ; mutable win_cycle : Card.t list
   ; mutable bluffs_completed : int
-  ; mutable my_cards : Card.t list
+  ; mutable my_cards : (Card.Rank.t, int) Hashtbl.t
+      (*remember to initialize all ranks as 0 in hashtbl*)
   }
-[@@deriving sexp, compare, fields]
+[@@deriving fields]
 
 let card_on_turn num =
   match num % 13 with
@@ -31,5 +33,8 @@ let calc_win_cycle t ~(game_state : Game_state.t) =
   (* id should start at 0 if round starts at 1 *)
   let current_turn = game_state.round_num + t.id in
   List.init 13 ~f:(fun cycle_count ->
-    card_on_turn (current_turn + (game_state.player_count * cycle_count)))
+    let rank =
+      card_on_turn (current_turn + (game_state.player_count * cycle_count))
+    in
+    rank, Hashtbl.find_exn t.my_cards rank)
 ;;

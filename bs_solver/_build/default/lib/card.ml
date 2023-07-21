@@ -40,7 +40,5 @@ type t =
       { rank : Rank.t
       ; suit : Suit.t
       }
-  | Unknown of
-      { rank : Rank.t
-      }
+  | Unknown of { rank : Rank.t }
 [@@deriving sexp, compare, hash]
