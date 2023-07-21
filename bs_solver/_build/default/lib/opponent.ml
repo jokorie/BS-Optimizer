@@ -8,4 +8,3 @@ type t =
   ; mutable known_cards : Card.t list
   }
 [@@deriving sexp, compare, fields]
-

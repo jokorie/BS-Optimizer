@@ -27,7 +27,9 @@ module Rank : sig
 end
 
 type t =
+| Known of
   { rank : Rank.t
   ; suit : Suit.t
   }
+  |Unknown of {rank : Rank.t}
 [@@deriving sexp, compare, hash]
