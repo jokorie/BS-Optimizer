@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/bs_solver/META"
+  "_build/install/default/lib/bs_solver/dune-package"
+  "_build/install/default/lib/bs_solver/opam"
+]
+bin: [
+  "_build/install/default/bin/bs_solver"
+]
