@@ -1,41 +1,33 @@
 open! Core
 
-
 module Suit : sig
-
-    type t = 
-  | Heart | Diamomd | Spade | Club
+  type t =
+    | Heart
+    | Diamomd
+    | Spade
+    | Club
   [@@deriving sexp, compare, hash]
-
-  
-
 end
 
 module Rank : sig
-
-        type t =
+  type t =
     | Ace
     | Two
-    | Three 
-    | Four 
+    | Three
+    | Four
     | Five
-    | Six 
+    | Six
     | Seven
     | Eight
-    | Nine 
-    | Ten 
-    | Jack 
-    | Queen 
+    | Nine
+    | Ten
+    | Jack
+    | Queen
     | King
+end
 
-
-  end
-
-
-      type t = 
-      {
-      rank: Rank.t;
-      suit:Suit.t;
-      }
-  
-    [@@deriving sexp, compare, hash]
+type t =
+  { rank : Rank.t
+  ; suit : Suit.t
+  }
+[@@deriving sexp, compare, hash]
