@@ -2,3 +2,6 @@
 
 (** @canonical Bs_solver.Card *)
 module Card = Bs_solver__Card
+
+(** @canonical Bs_solver.Player *)
+module Player = Bs_solver__Player
