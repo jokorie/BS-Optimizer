@@ -4,7 +4,8 @@ type t =
   { mutable round_num : int
   ; player_count : int
   ; mutable pot : Card.t list (* accumulated cards*)
-  ; all_players : Player.t Int.Table.t
+  ; all_players : All_players.t
   }
+  [@@deriving fields, sexp]
 
 val card_on_turn : t -> Card.Rank.t

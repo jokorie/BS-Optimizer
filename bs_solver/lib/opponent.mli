@@ -7,4 +7,4 @@ type t =
   ; mutable bluffs_completed : int
   ; mutable known_cards : Card.t list
   }
-[@@deriving sexp_of, compare, fields]
+[@@deriving sexp, compare, fields]

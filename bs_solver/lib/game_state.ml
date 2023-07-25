@@ -4,7 +4,8 @@ type t =
   { mutable round_num : int
   ; player_count : int
   ; mutable pot : Card.t list
-  ; all_players : Player.t Int.Table.t
+  ; all_players : All_players.t
+  (* ; all_players : (Int, Player.t) Hashtbl.t *)
   }
 [@@deriving fields, sexp]
 

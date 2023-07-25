@@ -11,8 +11,10 @@ module Suit = struct
   end
 
   include T
+  
   include Comparable.Make (T)
   include Hashable.Make (T)
+  include Hashable.Make_plain_and_derive_hash_fold_t (T)
 end
 
 module Rank = struct
@@ -36,6 +38,7 @@ module Rank = struct
   include T
   include Comparable.Make (T)
   include Hashable.Make (T)
+  include Hashable.Make_plain_and_derive_hash_fold_t (T)
 end
 
 type t =
