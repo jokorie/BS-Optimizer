@@ -2,13 +2,13 @@ open! Core
 open! In_channel
 
 let declare_player_count () =
-  Printf.printf "Please specify how many players are in the round ";
+  print_endline "Please specify how many players are in the round ";
   let player_count = In_channel.input_line_exn stdin in
   Int.of_string player_count
 ;;
 
 let declare_my_pos () =
-  Printf.printf
+  print_endline
     "Please specify your seating index at the table clockwise from the 0th \
      player (the player with the Ace of Spades): ";
   let my_pos = In_channel.input_line_exn stdin in
@@ -24,7 +24,7 @@ let declare_my_cards ~my_pos ~player_count =
   let my_cards = My_cards.init () in
   let _ =
     List.init hand_size ~f:(fun _ ->
-      Printf.printf
+      print_endline
         "Please specify the card you received in any order with the Rank \
          Suit notation";
       let card_input_string = In_channel.input_line_exn stdin in
@@ -55,7 +55,6 @@ let game_init () =
               (if player_id < 52 % player_count
                then (52 / player_count) + 1
                else 52 / player_count)
-          ; win_cycle = []
           ; bluffs_completed = 0
           ; cards
           })
@@ -68,5 +67,6 @@ let game_init () =
     ; my_id = my_pos
     }
   in
+  print_s[%message (game_state:Game_state.t)];
   game_state
 ;;
