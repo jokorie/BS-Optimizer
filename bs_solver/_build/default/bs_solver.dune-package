@@ -1,4 +1,0 @@
-(lang dune 3.9)
-(name bs_solver)
-(sections (lib .) (bin ../../bin))
-(files (lib (META dune-package opam)) (bin (bs_solver)))

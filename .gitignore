@@ -1,5 +1,5 @@
-_opam
-_build
+bs_solver/_opam
+bs_solver/_build
 *.install
 .merlin
 *.corrected

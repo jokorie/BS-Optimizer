@@ -7,10 +7,10 @@ module T = struct
   ; mutable win_cycle : Card.t list
   ; mutable bluffs_completed : int
   (* ; mutable my_cards : int Card.Rank.Table.t *)
-  ; mutable my_cards : (Card.Rank.t, int) Hashtbl.t
+  (* ; mutable my_cards : (Card.Rank.t, int) Hashtbl.t *)
       (*remember to initialize all ranks as 0 in hashtbl*)
   }
-[@@deriving fields]
+[@@deriving sexp, fields]
 end
 include T
 (* include Comparable.Make (T)
