@@ -5,7 +5,8 @@ type t =
   ; player_count : int
   ; mutable pot : Card.t list (* accumulated cards*)
   ; all_players : All_players.t
+  ; my_id : int
   }
-  [@@deriving fields, sexp]
+[@@deriving fields, sexp]
 
 val card_on_turn : t -> Card.Rank.t
