@@ -1,3 +1,6 @@
 open! Core
 
-type t = Int.t Card.Rank.Table.t [@@deriving sexp]
+type t = int Card.Rank.Table.t [@@deriving sexp]
+
+val init : unit -> t
+val add_card : t -> card:Card.t -> unit
