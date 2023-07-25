@@ -11,3 +11,8 @@ _build
 # emacs lock and backup files
 *~
 .#*
+
+
+.c*
+.i*
+.d*
