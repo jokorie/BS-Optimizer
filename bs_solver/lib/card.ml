@@ -11,7 +11,6 @@ module Suit = struct
   end
 
   include T
-  
   include Comparable.Make (T)
   include Hashable.Make (T)
   (* include Hashable.Make_plain_and_derive_hash_fold_t (T) *)
@@ -35,6 +34,7 @@ module Rank = struct
       | King
     [@@deriving sexp, compare, hash]
   end
+
   include T
   include Comparable.Make (T)
   include Hashable.Make (T)
