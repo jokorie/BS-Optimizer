@@ -1,4 +1,4 @@
 (executable
  (public_name bs_solver)
  (name main)
- (libraries bs_solver))
+ (libraries bs_solver async core))

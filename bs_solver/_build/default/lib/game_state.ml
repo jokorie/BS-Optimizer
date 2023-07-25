@@ -7,6 +7,7 @@ type t =
   ; all_players : All_players.t
   ; my_id : int
   }
+
 [@@deriving fields, sexp]
 
 let card_on_turn t =
