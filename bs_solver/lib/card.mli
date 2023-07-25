@@ -24,7 +24,9 @@ module Rank : sig
     | Jack
     | Queen
     | King
-    [@@deriving sexp, compare, hash]
+  [@@deriving sexp, compare, hash]
+
+  include Hashable.S with type t:= t
 end
 
 type t =
