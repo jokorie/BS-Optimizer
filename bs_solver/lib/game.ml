@@ -106,4 +106,5 @@ let rec play_game ~(game : Game_state.t) =
     in
     game.round_num <- game.round_num + 1;
     play_game ~game
+    
 ;;
