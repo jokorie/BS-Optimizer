@@ -16,7 +16,7 @@ module Rank : sig
     | Jack
     | Queen
     | King
-  [@@deriving sexp, compare, hash]
+  [@@deriving sexp, compare, hash, equal]
 
   val of_int : int -> t
   val of_char : char -> t
@@ -37,6 +37,7 @@ end
 type t =
   | Known of Known_Card.t
   | Unknown of Unknown_Card.t
-[@@deriving sexp, compare, hash]
+[@@deriving sexp, compare, hash, equal]
 
 val of_string : string -> t
+val rank : t -> Rank.t

@@ -16,7 +16,7 @@ module Rank = struct
       | Jack
       | Queen
       | King
-    [@@deriving sexp, compare, hash]
+    [@@deriving sexp, compare, hash, equal]
   end
 
   include T
@@ -62,22 +62,21 @@ module Rank = struct
 end
 
 module Known_Card = struct
-  type t =
-    { rank : Rank.t
-    }
-  [@@deriving sexp, compare, hash, fields]
+  type t = { rank : Rank.t } [@@deriving sexp, compare, hash, fields, equal]
 end
 
 module Unknown_Card = struct
-  type t = { rank : Rank.t } [@@deriving sexp, compare, hash, fields]
+  type t = { rank : Rank.t } [@@deriving sexp, compare, hash, fields, equal]
 end
 
 type t =
   | Known of Known_Card.t
   | Unknown of Unknown_Card.t
-[@@deriving sexp, compare, hash]
+[@@deriving sexp, compare, hash, equal]
 
 let of_string string =
   let rank = Rank.of_char (String.get string 0) in
   Known { rank }
 ;;
+
+let rank t = match t with Known { rank } -> rank | Unknown { rank } -> rank
