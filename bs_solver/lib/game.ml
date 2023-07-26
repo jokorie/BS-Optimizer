@@ -19,8 +19,9 @@ let declare_my_cards ~my_pos ~player_count =
   let hand_size =
     if my_pos < 52 % player_count
     then (52 / player_count) + 1
-    else 52 / my_pos
+    else 52 / player_count
   in
+  print_s[%message (hand_size:int)];
   let my_cards = My_cards.init () in
   let _ =
     List.init hand_size ~f:(fun _ ->
