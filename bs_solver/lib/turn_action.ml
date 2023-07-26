@@ -80,7 +80,7 @@ let assess_calling_bluff ~(game_state : Game_state.t) ~(claim : Card.t * int)
    _rest_win_cycle = List.split_n win_cycle 0 in let _card_needed, _how_many
    = hd_win_cycle in [] ) ;; *)
 
-let rec _lie_with_last_card
+let rec lie_with_last_card
   ~(win_cycle : (Card.t * int) list)
   ~(strategy : Strategy.t)
   : Strategy.t
@@ -88,7 +88,7 @@ let rec _lie_with_last_card
   match win_cycle with
   | [] -> strategy
   | _ ->
-    let hd_win_cycle, rest_win = List.split_n win_cycle 0 in
+    let hd_win_cycle, rest_win = List.split_n win_cycle 1 in
     let card, how_many = List.hd_exn hd_win_cycle in
     (match how_many with
      | 0 ->
@@ -100,19 +100,19 @@ let rec _lie_with_last_card
        (match qty with
         | 1 ->
           let strategy = strategy @ [ card, [ last_card ] ] in
-          _lie_with_last_card
+          lie_with_last_card
             ~win_cycle:(chop_win_seq beg_rest_win)
             ~strategy
         | _ ->
           let strategy = strategy @ [ card, [ last_card ] ] in
           let new_win_cycle = beg_rest_win @ [ last_card, qty - 1 ] in
-          _lie_with_last_card
+          lie_with_last_card
             ~win_cycle:(chop_win_seq new_win_cycle)
             ~strategy)
      | _ ->
        let cards_to_provide = List.init how_many ~f:(fun _ -> card) in
        let strategy = strategy @ [ card, cards_to_provide ] in
-       _lie_with_last_card ~win_cycle:(chop_win_seq rest_win) ~strategy)
+       lie_with_last_card ~win_cycle:(chop_win_seq rest_win) ~strategy)
 ;;
 
 (* print_s[%message ((fill_missing_with_tail ~win_cycle:[]
