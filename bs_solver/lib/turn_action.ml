@@ -100,9 +100,7 @@ let rec lie_with_last_card
        (match qty with
         | 1 ->
           let strategy = strategy @ [ card, [ last_card ] ] in
-          lie_with_last_card
-            ~win_cycle:(chop_win_seq beg_rest_win)
-            ~strategy
+          lie_with_last_card ~win_cycle:(chop_win_seq beg_rest_win) ~strategy
         | _ ->
           let strategy = strategy @ [ card, [ last_card ] ] in
           let new_win_cycle = beg_rest_win @ [ last_card, qty - 1 ] in
