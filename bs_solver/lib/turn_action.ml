@@ -1,4 +1,5 @@
 open! Core
+open Util_functions
 
 let conflicting_claim
   ~(game_state : Game_state.t)
@@ -41,9 +42,7 @@ let useful_call ~(game_state : Game_state.t) ~(claim : Card.Rank.t * int) =
     let my_profile =
       Hashtbl.find_exn game_state.all_players game_state.my_id
     in
-    let win_cycle =
-      Util_functions.calc_win_cycle ~me:my_profile ~game_state
-    in
+    let win_cycle = calc_win_cycle ~me:my_profile ~game_state in
     let immediate_win_cycle, _ = List.split_n win_cycle 5 in
     let cards_we_need =
       List.filter_map immediate_win_cycle ~f:(fun (rank, how_many) ->
@@ -59,7 +58,7 @@ let card_probability
   ~(claim : Card.Rank.t * int)
   =
   (*Relies on pure odds to assess whether or not we should call a bluff or
-    not.*)
+    not. Should return a bool! *)
   ignore game_state;
   ignore claim;
   true
@@ -85,21 +84,39 @@ let assess_calling_bluff
   else card_probability ~game_state ~claim
 ;;
 
-let necessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+let necessary_bluff ~(game_state : Game_state.t) =
   (*In the event we are prompted to give a card we do not have, reccomend a
-    bluff.*)
-  ignore game_state;
-  ignore card
+    bluff. Attempts to grab the furthest card we would need in our win cycle,
+    unless only one of it is left, it is not optimal to lie on the last
+    round.*)
+  let me = Hashtbl.find_exn game_state.all_players game_state.my_id in
+  let win_cycle = calc_win_cycle ~me ~game_state in
+  let realized_win_cycle = chop_win_seq win_cycle in
+  let num_cycles_until_win = List.length realized_win_cycle in
+  let last_needed_card, how_many = List.last_exn realized_win_cycle in
+  if how_many > 1
+  then [ last_needed_card, 1 ]
+  else (
+    let second_last_card, how_many =
+      List.nth_exn realized_win_cycle (num_cycles_until_win - 1)
+    in
+    if how_many > 0 then [ second_last_card, 1 ] else [ last_needed_card, 1 ])
 ;;
 
 let unecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
-  ignore game_state;
-  ignore card
-;;
-
-let unnecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
   (*In the event we have the cards but want to overexaggerate how many cards
     we actually have, reccomend what to lie with*)
   ignore game_state;
-  ignore card
+  ignore card;
+  []
+;;
+
+let my_turn_action ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+  (*When it is our turn, assess if we have the cards we need to provide, and
+    thus recommend a course of action.*)
+  let me = Hashtbl.find_exn game_state.all_players game_state.my_id in
+  let num_needed_card = Hashtbl.find_exn me.cards card in
+  if num_needed_card > 0
+  then unecessary_bluff ~game_state ~card
+  else necessary_bluff ~game_state
 ;;

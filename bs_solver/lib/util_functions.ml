@@ -18,7 +18,7 @@ let card_on_turn num =
   | _ -> failwith "Invalid round!"
 ;;
 
-let chop_win_seq sequence =
+let chop_win_seq sequence : (Card.Rank.t * int) list =
   (*Given a win sequence, if we dont have cards at the end of our win
     sequence, just eliminate that part.*)
   let seq, _ =
@@ -26,9 +26,9 @@ let chop_win_seq sequence =
       sequence
       ~init:([], [])
       ~f:(fun (built, pending) (rank, count) ->
-        match count with
-        | 0 -> built, pending @ [ rank, count ]
-        | _ -> built @ pending @ [ rank, count ], [])
+      match count with
+      | 0 -> built, pending @ [ rank, count ]
+      | _ -> built @ pending @ [ rank, count ], [])
   in
   seq
 ;;
