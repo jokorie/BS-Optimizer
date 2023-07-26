@@ -93,6 +93,11 @@ let necessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
 ;;
 
 let unecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+  ignore game_state;
+  ignore card
+;;
+
+let unnecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
   (*In the event we have the cards but want to overexaggerate how many cards
     we actually have, reccomend what to lie with*)
   ignore game_state;
