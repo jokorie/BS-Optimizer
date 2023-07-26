@@ -85,14 +85,14 @@ let assess_calling_bluff
   else card_probability ~game_state ~claim
 ;;
 
-let neccessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+let necessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
   (*In the event we are prompted to give a card we do not have, reccomend a
     bluff.*)
   ignore game_state;
   ignore card
 ;;
 
-let unnecccessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+let unecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
   (*In the event we have the cards but want to overexaggerate how many cards
     we actually have, reccomend what to lie with*)
   ignore game_state;
