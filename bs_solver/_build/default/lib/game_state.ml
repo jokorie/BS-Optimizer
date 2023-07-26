@@ -3,14 +3,14 @@ open! Core
 type t =
   { mutable round_num : int
   ; player_count : int
-  ; mutable pot : Card.t list
+  ; mutable pot : (int*Card.t) list
   ; all_players : All_players.t
   ; my_id : int
   }
 [@@deriving fields, sexp]
 
 let card_on_turn t =
-  match t.round_num % 13 with
+  match (t.round_num + 1) % 13 with
   | 1 -> (Ace : Card.Rank.t)
   | 2 -> Two
   | 3 -> Three
@@ -32,14 +32,14 @@ let game_over t =
     t.all_players
     ~init:false
     ~f:(fun ~key:player_id ~data:(player : Player.t) game_is_over ->
-      match game_is_over with
-      | true -> true
-      | false ->
-        (match player.hand_size = 0 with
-         | true ->
-           print_s [%message "player" (player_id : int) "won the game"];
-           true
-         | false -> false))
+    match game_is_over with
+    | true -> true
+    | false ->
+      (match player.hand_size = 0 with
+       | true ->
+         print_s [%message "player" (player_id : int) "won the game"];
+         true
+       | false -> false))
 ;;
 
 let is_my_turn t =
@@ -49,6 +49,6 @@ let is_my_turn t =
 
 let whos_turn t =
   let player_id = t.round_num % t.player_count in
-  print_s [%message "Its player" (player_id : int) "turn"];
+  (* print_s [%message "Its player" (player_id : int) "turn"]; *)
   Hashtbl.find_exn t.all_players player_id
 ;;

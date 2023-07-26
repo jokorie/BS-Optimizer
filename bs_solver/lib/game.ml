@@ -26,9 +26,8 @@ let declare_my_cards ~my_pos ~player_count =
   let _ =
     List.init hand_size ~f:(fun _ ->
       print_endline
-        "Please specify the card you received in any order with the Rank \
-         Suit notation \n\
-        \ e.g. 2s - representing the Two of Spades";
+        "Please specify the Rank of the  card you received
+        \ e.g. 2 - representing the Two";
       let card_input_string = In_channel.input_line_exn stdin in
       let card = Card.of_string card_input_string in
       My_cards.add_card my_cards ~card)
@@ -86,19 +85,85 @@ let my_moves game =
   print_endline "I made a move"
 ;;
 
+let bluff_recomendation _game =
+  print_endline "No recommendation functionality integrated"
+;;
+
+let showdown ~(game : Game_state.t) ~(acc : Player.t) ~(def : Player.t) =
+  ignore game;
+  ignore acc;
+  ignore def;
+  print_endline
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
+  print_endline "Showdown";
+  print_endline
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
+  
+
+
+;;
+
+let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
+  bluff_recomendation game;
+  print_s
+    [%message
+      "Has anyone called "
+        (player.id : int)
+        "bluff. Type false and the round will continue"];
+  let any_calls = Bool.of_string (In_channel.input_line_exn stdin) in
+  match any_calls with
+  | true ->
+    print_s
+      [%message
+        "Has anyone called "
+          (player.id : int)
+          "bluff. Type 'me' if you would like to call"];
+    let caller = In_channel.input_line_exn stdin in
+    if String.equal (String.lowercase caller) "me"
+    then
+      showdown
+        ~game
+        ~acc:(Hashtbl.find_exn game.all_players game.my_id)
+        ~def:player
+    else (
+      let caller_id = Int.of_string caller in
+      showdown
+        ~game
+        ~acc:(Hashtbl.find_exn game.all_players caller_id)
+        ~def:player)
+  | false -> ()
+;;
+
 let opp_moves game =
   let player = Game_state.whos_turn game in
-  player.hand_size <- player.hand_size - 1;
-  print_s [%message "Cards left after move: " (player.hand_size : int)];
-  print_endline "Opp made a move"
+  let rank = Game_state.card_on_turn game in
+  print_s
+    [%message "Please specify how many cards " (player.id : int) "put down"];
+  let cards_put_down = Int.of_string (In_channel.input_line_exn stdin) in
+  (*must be greater than zero*)
+  player.hand_size <- player.hand_size - cards_put_down;
+  let added_cards =
+    List.init cards_put_down ~f:(fun _ -> (player.id, Card.Unknown { rank }))
+  in
+  game.pot <- added_cards @ game.pot;
+  print_endline "Opp made a move";
+  bluff_called ~game ~player;
+  print_s [%message "Cards left after move: " (player.hand_size : int)]
 ;;
 
 let rec play_game ~(game : Game_state.t) =
   print_endline "------------------------------------------------------";
-  print_s [%message (game.round_num : int)];
+  let player = Game_state.whos_turn game in
+  let rank = Game_state.card_on_turn game in
   match Game_state.game_over game with
   | true -> end_processes game
   | false ->
+    print_s
+      [%message
+        "It is player"
+          (player.id : int)
+          "turn to provide"
+          (rank : Card.Rank.t)];
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game

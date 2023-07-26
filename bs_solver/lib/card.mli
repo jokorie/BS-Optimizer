@@ -1,15 +1,5 @@
 open! Core
 
-module Suit : sig
-  type t =
-    | Heart
-    | Diamond
-    | Spade
-    | Club
-  [@@deriving sexp, compare, hash]
-
-  val of_char : char -> t
-end
 
 module Rank : sig
   type t =
@@ -37,7 +27,6 @@ end
 module Known_Card : sig
   type t =
     { rank : Rank.t
-    ; suit : Suit.t
     }
 end
 
