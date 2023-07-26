@@ -14,7 +14,7 @@ let init () =
 
 let add_card t ~(card : Card.t) =
   match card with
-  | Known { rank; _ } ->
+  | Known { rank } ->
     Hashtbl.set t ~key:rank ~data:(Hashtbl.find_exn t rank + 1)
   | Unknown { rank } ->
     Hashtbl.set t ~key:rank ~data:(Hashtbl.find_exn t rank + 1)

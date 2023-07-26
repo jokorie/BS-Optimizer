@@ -26,9 +26,8 @@ let declare_my_cards ~my_pos ~player_count =
   let _ =
     List.init hand_size ~f:(fun _ ->
       print_endline
-        "Please specify the card you received in any order with the Rank \
-         Suit notation \n\
-        \ e.g. 2s - representing the Two of Spades";
+        "Please specify the Rank of the  card you received
+        \ e.g. 2 - representing the Two";
       let card_input_string = In_channel.input_line_exn stdin in
       let card = Card.of_string card_input_string in
       My_cards.add_card my_cards ~card)
