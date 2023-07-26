@@ -41,7 +41,9 @@ let calc_win_cycle ~(me : Player.t) ~(game_state : Game_state.t) =
     match game_state.round_num % game_state.player_count = me.id with
     | true -> me.id
     | false ->
-      Int.abs ((game_state.round_num % game_state.player_count) - me.id)
+      match (game_state.round_num % game_state.player_count < me.id) with 
+      | true -> (game_state.round_num % game_state.player_count) - me.id
+      | false -> (game_state.round_num % game_state.player_count) - me.id + game_state.player_count
   in
   let full_cycle =
     List.init 13 ~f:(fun cycle_count ->
