@@ -88,16 +88,19 @@ module Rank = struct
 end
 
 module Known_Card = struct
-  type t = { rank : Rank.t; suit : Suit.t } [@@deriving sexp, compare, hash, fields]
+  type t =
+    { rank : Rank.t
+    ; suit : Suit.t
+    }
+  [@@deriving sexp, compare, hash, fields]
 end
 
 module Unknown_Card = struct
-  type t = { rank : Rank.t} [@@deriving sexp, compare, hash, fields]
+  type t = { rank : Rank.t } [@@deriving sexp, compare, hash, fields]
 end
 
 type t =
-  | Known of
-      Known_Card.t
+  | Known of Known_Card.t
   | Unknown of Unknown_Card.t
 [@@deriving sexp, compare, hash]
 

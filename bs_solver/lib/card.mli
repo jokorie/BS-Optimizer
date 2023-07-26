@@ -35,18 +35,18 @@ module Rank : sig
 end
 
 module Known_Card : sig
-  type t = { rank : Rank.t
-  ; suit : Suit.t
-  }
+  type t =
+    { rank : Rank.t
+    ; suit : Suit.t
+    }
 end
 
 module Unknown_Card : sig
-  type t = { rank : Rank.t}
+  type t = { rank : Rank.t }
 end
 
 type t =
   | Known of Known_Card.t
-      
   | Unknown of Unknown_Card.t
 [@@deriving sexp, compare, hash]
 
