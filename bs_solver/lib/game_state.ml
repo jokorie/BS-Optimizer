@@ -10,7 +10,7 @@ type t =
 [@@deriving fields, sexp]
 
 let card_on_turn t =
-  match t.round_num % 13 with
+  match (t.round_num + 1) % 13 with
   | 1 -> (Ace : Card.Rank.t)
   | 2 -> Two
   | 3 -> Three
@@ -32,14 +32,14 @@ let game_over t =
     t.all_players
     ~init:false
     ~f:(fun ~key:player_id ~data:(player : Player.t) game_is_over ->
-      match game_is_over with
-      | true -> true
-      | false ->
-        (match player.hand_size = 0 with
-         | true ->
-           print_s [%message "player" (player_id : int) "won the game"];
-           true
-         | false -> false))
+    match game_is_over with
+    | true -> true
+    | false ->
+      (match player.hand_size = 0 with
+       | true ->
+         print_s [%message "player" (player_id : int) "won the game"];
+         true
+       | false -> false))
 ;;
 
 let is_my_turn t =
