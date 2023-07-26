@@ -3,7 +3,7 @@ open! Core
 type t =
   { mutable round_num : int
   ; player_count : int
-  ; mutable pot : Card.t list (* accumulated cards*)
+  ; mutable pot : (int*Card.t) list (* accumulated cards*)
   ; all_players : All_players.t
   ; my_id : int
   }

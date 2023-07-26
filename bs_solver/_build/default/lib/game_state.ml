@@ -3,7 +3,7 @@ open! Core
 type t =
   { mutable round_num : int
   ; player_count : int
-  ; mutable pot : Card.t list
+  ; mutable pot : (int*Card.t) list
   ; all_players : All_players.t
   ; my_id : int
   }
@@ -49,6 +49,6 @@ let is_my_turn t =
 
 let whos_turn t =
   let player_id = t.round_num % t.player_count in
-  print_s [%message "Its player" (player_id : int) "turn"];
+  (* print_s [%message "Its player" (player_id : int) "turn"]; *)
   Hashtbl.find_exn t.all_players player_id
 ;;

@@ -98,7 +98,10 @@ let showdown ~(game : Game_state.t) ~(acc : Player.t) ~(def : Player.t) =
     "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
   print_endline "Showdown";
   print_endline
-    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
+  
+
+
 ;;
 
 let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
@@ -141,7 +144,7 @@ let opp_moves game =
   (*must be greater than zero*)
   player.hand_size <- player.hand_size - cards_put_down;
   let added_cards =
-    List.init cards_put_down ~f:(fun _ -> Card.Unknown { rank })
+    List.init cards_put_down ~f:(fun _ -> (player.id, Card.Unknown { rank }))
   in
   game.pot <- added_cards @ game.pot;
   print_endline "Opp made a move";
@@ -153,15 +156,15 @@ let rec play_game ~(game : Game_state.t) =
   print_endline "------------------------------------------------------";
   let player = Game_state.whos_turn game in
   let rank = Game_state.card_on_turn game in
-  print_s
-    [%message
-      "It is player"
-        (player.id : int)
-        "turn to provide"
-        (rank : Card.Rank.t)];
   match Game_state.game_over game with
   | true -> end_processes game
   | false ->
+    print_s
+      [%message
+        "It is player"
+          (player.id : int)
+          "turn to provide"
+          (rank : Card.Rank.t)];
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game
