@@ -14,6 +14,7 @@ type t =
   | Jack
   | Queen
   | King
+
 [@@deriving sexp, compare, hash, equal]
 
 val of_int : int -> t

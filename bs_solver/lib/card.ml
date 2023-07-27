@@ -16,6 +16,7 @@ module T = struct
     | Queen
     | King
   [@@deriving sexp, compare, hash, equal]
+
 end
 
 include T

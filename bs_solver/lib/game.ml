@@ -143,6 +143,7 @@ let showdown
     in
     ()
   | false -> ()
+
 ;;
 
 let bluff_called ~(game : Game_state.t) ~(player : Player.t) ~cards_put_down =
@@ -207,6 +208,7 @@ let rec play_game ~(game : Game_state.t) =
           (player.id : int)
           "turn to provide"
           (card_on_turn : Card.t)];
+
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game

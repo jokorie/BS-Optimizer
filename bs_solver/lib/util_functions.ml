@@ -18,7 +18,7 @@ let card_on_turn num =
   | _ -> failwith "Invalid round!"
 ;;
 
-let chop_win_seq sequence =
+let chop_win_seq sequence : (Card.t * int) list =
   (*Given a win sequence, if we dont have cards at the end of our win
     sequence, just eliminate that part.*)
   let seq, _ =
