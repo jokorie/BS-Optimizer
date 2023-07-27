@@ -89,18 +89,64 @@ let bluff_recomendation _game =
   print_endline "No recommendation functionality integrated"
 ;;
 
-let showdown ~(game : Game_state.t) ~(acc : Player.t) ~(def : Player.t) =
+let showdown
+  ~(game : Game_state.t)
+  ~(acc : Player.t)
+  ~(def : Player.t)
+  ~cards_put_down
+  =
   ignore game;
   ignore acc;
   ignore def;
+  ignore cards_put_down;
   print_endline
     "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
   print_endline "Showdown";
   print_endline
-    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
+  let card_on_turn = Game_state.card_on_turn game in
+  let revealed_cards =
+    List.init cards_put_down ~f:(fun _ ->
+      print_endline
+        "Please specify the Rank of the  card revealed\n\
+        \         e.g. 2 - representing the Two";
+      let card_input_string = In_channel.input_line_exn stdin in
+      let card = Card.of_string card_input_string in
+      card)
+  in
+  let def_not_lying =
+    List.for_all revealed_cards ~f:(fun card -> Card.equal card_on_turn card)
+  in
+  let who_lost = match def_not_lying with true -> acc | false -> def in
+  who_lost.hand_size <- who_lost.hand_size + List.length game.pot;
+  let _ =
+    List.iter revealed_cards ~f:(fun card ->
+      My_cards.add_card who_lost.cards ~card)
+  in
+  match acc.id = game.my_id with
+  | true ->
+    let _, rest_of_pot = List.split_n game.pot cards_put_down in
+    print_s [%message (rest_of_pot : (int * Card.t) list)];
+    let _ =
+      List.iter (List.rev rest_of_pot) ~f:(fun (_, card) ->
+        print_endline
+          "Please specify the Rank of the card revealed e.g. 2 - \
+           representing the Two";
+        print_s [%message "Card claimed" (card : Card.t)];
+        let card_input_string = In_channel.input_line_exn stdin in
+        let actual_card = Card.of_string card_input_string in
+        match Card.equal actual_card card with
+        | true -> ()
+        | false ->
+          def.bluffs_completed <- def.bluffs_completed + 1;
+          My_cards.add_card acc.cards ~card)
+    in
+    ()
+  | false -> ()
+
 ;;
 
-let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
+let bluff_called ~(game : Game_state.t) ~(player : Player.t) ~cards_put_down =
   bluff_recomendation game;
   print_s
     [%message
@@ -122,12 +168,14 @@ let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
         ~game
         ~acc:(Hashtbl.find_exn game.all_players game.my_id)
         ~def:player
+        ~cards_put_down
     else (
       let caller_id = Int.of_string caller in
       showdown
         ~game
         ~acc:(Hashtbl.find_exn game.all_players caller_id)
-        ~def:player)
+        ~def:player
+        ~cards_put_down)
   | false -> ()
 ;;
 
@@ -141,21 +189,26 @@ let opp_moves game =
   player.hand_size <- player.hand_size - cards_put_down;
   let added_cards = List.init cards_put_down ~f:(fun _ -> player.id, card) in
   game.pot <- added_cards @ game.pot;
+  print_s [%message (game.pot : (int * Card.t) list)];
   print_endline "Opp made a move";
-  bluff_called ~game ~player;
+  bluff_called ~game ~player ~cards_put_down;
   print_s [%message "Cards left after move: " (player.hand_size : int)]
 ;;
 
 let rec play_game ~(game : Game_state.t) =
   print_endline "------------------------------------------------------";
   let player = Game_state.whos_turn game in
-  let rank = Game_state.card_on_turn game in
+  let card_on_turn = Game_state.card_on_turn game in
   match Game_state.game_over game with
   | true -> end_processes game
   | false ->
     print_s
       [%message
-        "It is player" (player.id : int) "turn to provide" (rank : Card.t)];
+        "It is player"
+          (player.id : int)
+          "turn to provide"
+          (card_on_turn : Card.t)];
+
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game

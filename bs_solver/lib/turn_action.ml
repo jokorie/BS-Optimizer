@@ -73,6 +73,7 @@ let assess_calling_bluff ~(game_state : Game_state.t) ~(claim : Card.t * int)
   else card_probability ~game_state ~claim
 ;;
 
+
 let necessary_bluff ~(game_state : Game_state.t) =
   (*In the event we are prompted to give a card we do not have, reccomend a
     bluff. Attempts to grab the furthest card we would need in our win cycle,
@@ -91,6 +92,7 @@ let necessary_bluff ~(game_state : Game_state.t) =
     in
     if how_many > 0 then [ second_last_card, 1 ] else [ last_needed_card, 1 ])
 ;;
+
 
 let unecessary_bluff ~(game_state : Game_state.t) ~(card : Card.t) =
   (*In the event we have the cards but want to overexaggerate how many cards

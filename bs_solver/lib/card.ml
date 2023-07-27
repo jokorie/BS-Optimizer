@@ -15,7 +15,8 @@ module T = struct
     | Jack
     | Queen
     | King
-  [@@deriving sexp, compare, hash]
+  [@@deriving sexp, compare, hash, equal]
+
 end
 
 include T
