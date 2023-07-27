@@ -2,7 +2,7 @@ open! Core
 
 let card_on_turn num =
   match num % 13 with
-  | 1 -> (Ace : Card.Rank.t)
+  | 1 -> (Ace : Card.t)
   | 2 -> Two
   | 3 -> Three
   | 4 -> Four
@@ -18,7 +18,7 @@ let card_on_turn num =
   | _ -> failwith "Invalid round!"
 ;;
 
-let chop_win_seq sequence : (Card.Rank.t * int) list =
+let chop_win_seq sequence : (Card.t * int) list =
   (*Given a win sequence, if we dont have cards at the end of our win
     sequence, just eliminate that part.*)
   let seq, _ =

@@ -3,7 +3,7 @@ open! Core
 type t =
   { mutable round_num : int
   ; player_count : int
-  ; mutable pot : (int*Card.t) list
+  ; mutable pot : (int * Card.t) list
   ; all_players : All_players.t
   ; my_id : int
   }
@@ -11,7 +11,7 @@ type t =
 
 let card_on_turn t =
   match (t.round_num + 1) % 13 with
-  | 1 -> (Ace : Card.Rank.t)
+  | 1 -> (Ace : Card.t)
   | 2 -> Two
   | 3 -> Three
   | 4 -> Four

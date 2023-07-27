@@ -26,8 +26,8 @@ let declare_my_cards ~my_pos ~player_count =
   let _ =
     List.init hand_size ~f:(fun _ ->
       print_endline
-        "Please specify the Rank of the  card you received
-        \ e.g. 2 - representing the Two";
+        "Please specify the Rank of the  card you received\n\
+        \         e.g. 2 - representing the Two";
       let card_input_string = In_channel.input_line_exn stdin in
       let card = Card.of_string card_input_string in
       My_cards.add_card my_cards ~card)
@@ -97,10 +97,7 @@ let showdown ~(game : Game_state.t) ~(acc : Player.t) ~(def : Player.t) =
     "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
   print_endline "Showdown";
   print_endline
-    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
-  
-
-
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 ;;
 
 let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
@@ -136,15 +133,13 @@ let bluff_called ~(game : Game_state.t) ~(player : Player.t) =
 
 let opp_moves game =
   let player = Game_state.whos_turn game in
-  let rank = Game_state.card_on_turn game in
+  let card = Game_state.card_on_turn game in
   print_s
     [%message "Please specify how many cards " (player.id : int) "put down"];
   let cards_put_down = Int.of_string (In_channel.input_line_exn stdin) in
   (*must be greater than zero*)
   player.hand_size <- player.hand_size - cards_put_down;
-  let added_cards =
-    List.init cards_put_down ~f:(fun _ -> (player.id, Card.Unknown { rank }))
-  in
+  let added_cards = List.init cards_put_down ~f:(fun _ -> player.id, card) in
   game.pot <- added_cards @ game.pot;
   print_endline "Opp made a move";
   bluff_called ~game ~player;
@@ -160,10 +155,7 @@ let rec play_game ~(game : Game_state.t) =
   | false ->
     print_s
       [%message
-        "It is player"
-          (player.id : int)
-          "turn to provide"
-          (rank : Card.Rank.t)];
+        "It is player" (player.id : int) "turn to provide" (rank : Card.t)];
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game
