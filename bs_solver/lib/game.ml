@@ -69,7 +69,7 @@ let game_init () =
     ; my_id = my_pos
     }
   in
-  print_s [%message (game_state : Game_state.t)];
+  (* print_s [%message (game_state : Game_state.t)]; *)
   game_state
 ;;
 
@@ -86,7 +86,11 @@ let my_moves game =
 ;;
 
 let bluff_recomendation _game =
-  print_endline "No recommendation functionality integrated"
+  print_endline
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
+  print_endline "No recommendation functionality integrated";
+  print_endline
+    "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 ;;
 
 let showdown
@@ -123,8 +127,8 @@ let showdown
     List.iter revealed_cards ~f:(fun card ->
       My_cards.add_card who_lost.cards ~card)
   in
-  match acc.id = game.my_id with
-  | true ->
+  match def_not_lying, acc.id = game.my_id with
+  | true, true ->
     let _, rest_of_pot = List.split_n game.pot cards_put_down in
     print_s [%message (rest_of_pot : (int * Card.t) list)];
     let _ =
@@ -142,8 +146,7 @@ let showdown
           My_cards.add_card acc.cards ~card)
     in
     ()
-  | false -> ()
-
+  | _, _ -> ()
 ;;
 
 let bluff_called ~(game : Game_state.t) ~(player : Player.t) ~cards_put_down =
@@ -208,7 +211,6 @@ let rec play_game ~(game : Game_state.t) =
           (player.id : int)
           "turn to provide"
           (card_on_turn : Card.t)];
-
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game

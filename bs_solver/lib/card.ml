@@ -45,6 +45,7 @@ let of_int int =
 let of_char char =
   match Char.uppercase char with
   | 'A' -> Ace
+  | '1' -> Ace
   | '2' -> Two
   | '3' -> Three
   | '4' -> Four
