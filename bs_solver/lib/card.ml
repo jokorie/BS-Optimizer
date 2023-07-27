@@ -16,11 +16,11 @@ module T = struct
     | Queen
     | King
   [@@deriving sexp, compare, hash, equal]
-
 end
 
 include T
 include Comparable.Make (T)
+include Sexpable.To_stringable (T)
 include Hashable.Make (T)
 
 (* include Hashable.Make_plain_and_derive_hash_fold_t (T) *)
