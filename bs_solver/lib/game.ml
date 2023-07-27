@@ -104,7 +104,7 @@ let showdown
   print_endline "Showdown";
   print_endline
     "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*";
-  let rank = Game_state.card_on_turn game in
+  let card_on_turn = Game_state.card_on_turn game in
   let revealed_cards =
     List.init cards_put_down ~f:(fun _ ->
       print_endline
@@ -115,8 +115,7 @@ let showdown
       card)
   in
   let def_not_lying =
-    List.for_all revealed_cards ~f:(fun card ->
-      Card.Rank.equal rank (Card.rank card))
+    List.for_all revealed_cards ~f:(fun card -> Card.equal card_on_turn card)
   in
   let who_lost = match def_not_lying with true -> acc | false -> def in
   who_lost.hand_size <- who_lost.hand_size + List.length game.pot;
@@ -181,15 +180,13 @@ let bluff_called ~(game : Game_state.t) ~(player : Player.t) ~cards_put_down =
 
 let opp_moves game =
   let player = Game_state.whos_turn game in
-  let rank = Game_state.card_on_turn game in
+  let card = Game_state.card_on_turn game in
   print_s
     [%message "Please specify how many cards " (player.id : int) "put down"];
   let cards_put_down = Int.of_string (In_channel.input_line_exn stdin) in
   (*must be greater than zero*)
   player.hand_size <- player.hand_size - cards_put_down;
-  let added_cards =
-    List.init cards_put_down ~f:(fun _ -> player.id, Card.Unknown { rank })
-  in
+  let added_cards = List.init cards_put_down ~f:(fun _ -> player.id, card) in
   game.pot <- added_cards @ game.pot;
   print_s [%message (game.pot : (int * Card.t) list)];
   print_endline "Opp made a move";
@@ -200,7 +197,7 @@ let opp_moves game =
 let rec play_game ~(game : Game_state.t) =
   print_endline "------------------------------------------------------";
   let player = Game_state.whos_turn game in
-  let rank = Game_state.card_on_turn game in
+  let card_on_turn = Game_state.card_on_turn game in
   match Game_state.game_over game with
   | true -> end_processes game
   | false ->
@@ -209,7 +206,7 @@ let rec play_game ~(game : Game_state.t) =
         "It is player"
           (player.id : int)
           "turn to provide"
-          (rank : Card.Rank.t)];
+          (card_on_turn : Card.t)];
     let _ =
       match Game_state.is_my_turn game with
       | true -> my_moves game

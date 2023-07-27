@@ -2,7 +2,7 @@ open! Core
 
 let card_on_turn num =
   match num % 13 with
-  | 1 -> (Ace : Card.Rank.t)
+  | 1 -> (Ace : Card.t)
   | 2 -> Two
   | 3 -> Three
   | 4 -> Four
@@ -26,9 +26,9 @@ let chop_win_seq sequence =
       sequence
       ~init:([], [])
       ~f:(fun (built, pending) (rank, count) ->
-        match count with
-        | 0 -> built, pending @ [ rank, count ]
-        | _ -> built @ pending @ [ rank, count ], [])
+      match count with
+      | 0 -> built, pending @ [ rank, count ]
+      | _ -> built @ pending @ [ rank, count ], [])
   in
   seq
 ;;

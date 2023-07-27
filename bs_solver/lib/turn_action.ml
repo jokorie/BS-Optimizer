@@ -1,9 +1,6 @@
 open! Core
 
-let conflicting_claim
-  ~(game_state : Game_state.t)
-  ~(claim : Card.Rank.t * int)
-  =
+let conflicting_claim ~(game_state : Game_state.t) ~(claim : Card.t * int) =
   (*Assesses whether an opponent is lying based on the cards we have in our
     hand.*)
   let card, num_claimed = claim in
@@ -15,10 +12,7 @@ let conflicting_claim
   available_cards < num_claimed
 ;;
 
-let check_opponent_win
-  ~(game_state : Game_state.t)
-  ~(claim : Card.Rank.t * int)
-  =
+let check_opponent_win ~(game_state : Game_state.t) ~(claim : Card.t * int) =
   (*If an opponent's claim on their turn allows them to win the game, call
     bluff (GAME WOULD BE OVER IF THEY SUCCEEDED...) )*)
   let opponent_id = game_state.round_num % game_state.player_count in
@@ -30,7 +24,7 @@ let check_opponent_win
   num_claimed - opponent_hand_size = 0
 ;;
 
-let useful_call ~(game_state : Game_state.t) ~(claim : Card.Rank.t * int) =
+let useful_call ~(game_state : Game_state.t) ~(claim : Card.t * int) =
   (*Assesses if calling a bluff would be incentivized regardlesss of the
     outcome, due to the claimed card being in the near future of our win
     cycle. ** Hardcoded threshold of "small pot" being 5 cards or less and
@@ -50,14 +44,11 @@ let useful_call ~(game_state : Game_state.t) ~(claim : Card.Rank.t * int) =
         match how_many with 0 -> Some rank | _ -> None)
     in
     List.exists cards_we_need ~f:(fun card_needed ->
-      Card.Rank.compare card_needed card_claimed = 0))
+      Card.compare card_needed card_claimed = 0))
   else false
 ;;
 
-let card_probability
-  ~(game_state : Game_state.t)
-  ~(claim : Card.Rank.t * int)
-  =
+let card_probability ~(game_state : Game_state.t) ~(claim : Card.t * int) =
   (*Relies on pure odds to assess whether or not we should call a bluff or
     not.*)
   ignore game_state;
@@ -65,9 +56,7 @@ let card_probability
   true
 ;;
 
-let assess_calling_bluff
-  ~(game_state : Game_state.t)
-  ~(claim : Card.Rank.t * int)
+let assess_calling_bluff ~(game_state : Game_state.t) ~(claim : Card.t * int)
   =
   (*Runs through the different strategies to see if someone is bluffing or
     not. Strategy 1: If their claim conflicts woith the cards I currently
@@ -85,14 +74,14 @@ let assess_calling_bluff
   else card_probability ~game_state ~claim
 ;;
 
-let necessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+let necessary_bluff ~(game_state : Game_state.t) ~(card : Card.t) =
   (*In the event we are prompted to give a card we do not have, reccomend a
     bluff.*)
   ignore game_state;
   ignore card
 ;;
 
-let unnecessary_bluff ~(game_state : Game_state.t) ~(card : Card.Rank.t) =
+let unnecessary_bluff ~(game_state : Game_state.t) ~(card : Card.t) =
   (*In the event we have the cards but want to overexaggerate how many cards
     we actually have, reccomend what to lie with*)
   ignore game_state;

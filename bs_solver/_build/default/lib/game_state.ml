@@ -11,7 +11,7 @@ type t =
 
 let card_on_turn t =
   match (t.round_num + 1) % 13 with
-  | 1 -> (Ace : Card.Rank.t)
+  | 1 -> (Ace : Card.t)
   | 2 -> Two
   | 3 -> Three
   | 4 -> Four
