@@ -6,7 +6,7 @@ module T = struct
       id : int (* represents position in group as well *)
     ; mutable hand_size : int
     ; mutable bluffs_completed : int
-    ; mutable cards : int Card.Rank.Table.t
+    ; mutable cards : int Card.Table.t
         (*remember to initialize all ranks as 0 in hashtbl*)
     }
   [@@deriving sexp, fields]
