@@ -73,6 +73,57 @@ let assess_calling_bluff ~(game_state : Game_state.t) ~(claim : Card.t * int)
   else card_probability ~game_state ~claim
 ;;
 
+(* let rec fill_with_tail ~(win_cycle : (Card.t * int) list) ~(strategy :
+   Strategy.t) : Strategy.t =
+
+   match win_cycle with | [] -> strategy | _ -> ( let hd_win_cycle,
+   _rest_win_cycle = List.split_n win_cycle 0 in let _card_needed, _how_many
+   = hd_win_cycle in [] ) ;; *)
+
+let rec _lie_with_last_card
+  ~(win_cycle : (Card.t * int) list)
+  ~(strategy : Strategy.t)
+  : Strategy.t
+  =
+  match win_cycle with
+  | [] -> strategy
+  | _ ->
+    let hd_win_cycle, rest_win = List.split_n win_cycle 0 in
+    let card, how_many = List.hd_exn hd_win_cycle in
+    (match how_many with
+     | 0 ->
+       let rest_win_length = List.length rest_win in
+       let beg_rest_win, tl_rest_win =
+         List.split_n rest_win (rest_win_length - 1)
+       in
+       let last_card, qty = List.hd_exn tl_rest_win in
+       (match qty with
+        | 1 ->
+          let strategy = strategy @ [ card, [ last_card ] ] in
+          _lie_with_last_card
+            ~win_cycle:(chop_win_seq beg_rest_win)
+            ~strategy
+        | _ ->
+          let strategy = strategy @ [ card, [ last_card ] ] in
+          let new_win_cycle = beg_rest_win @ [ last_card, qty - 1 ] in
+          _lie_with_last_card
+            ~win_cycle:(chop_win_seq new_win_cycle)
+            ~strategy)
+     | _ ->
+       let cards_to_provide = List.init how_many ~f:(fun _ -> card) in
+       let strategy = strategy @ [ card, cards_to_provide ] in
+       _lie_with_last_card ~win_cycle:(chop_win_seq rest_win) ~strategy)
+;;
+
+(* print_s[%message ((fill_missing_with_tail ~win_cycle:[]
+   ~strategy:[]):Strategy.t)]; *)
+(* List.fold win_cycle ~init:[] ~f:(fun strategy, (card, how_many) -> ( match
+   how_many with | 0 -> ( let win_cycle_length = List.length win_cycle in let
+   win_cycle_cut, tail_of_win_cycle = List.split_n (win_cycle_length -1) in
+   let last_card, num = List.hd_exn tail_of_win_cycle in let bluff = [(card,
+   [last_card])] in
+
+   ) | _ -> )) *)
 
 let necessary_bluff ~(game_state : Game_state.t) =
   (*In the event we are prompted to give a card we do not have, reccomend a
@@ -82,17 +133,9 @@ let necessary_bluff ~(game_state : Game_state.t) =
   let me = Hashtbl.find_exn game_state.all_players game_state.my_id in
   let win_cycle = calc_win_cycle ~me ~game_state in
   let realized_win_cycle = chop_win_seq win_cycle in
-  let num_cycles_until_win = List.length realized_win_cycle in
-  let last_needed_card, how_many = List.last_exn realized_win_cycle in
-  if how_many > 1
-  then [ last_needed_card, 1 ]
-  else (
-    let second_last_card, how_many =
-      List.nth_exn realized_win_cycle (num_cycles_until_win - 1)
-    in
-    if how_many > 0 then [ second_last_card, 1 ] else [ last_needed_card, 1 ])
+  let last_needed_card, _ = List.last_exn realized_win_cycle in
+  [ last_needed_card, 1 ]
 ;;
-
 
 let unecessary_bluff ~(game_state : Game_state.t) ~(card : Card.t) =
   (*In the event we have the cards but want to overexaggerate how many cards
