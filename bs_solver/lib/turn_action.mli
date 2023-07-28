@@ -31,3 +31,8 @@ val my_turn_action
   :  game_state:Game_state.t
   -> card:Card.t
   -> (Card.t * int) list
+
+val lie_with_last_card
+  :  win_cycle:(Card.t * int) list
+  -> strategy:Strategy.t
+  -> Strategy.t
