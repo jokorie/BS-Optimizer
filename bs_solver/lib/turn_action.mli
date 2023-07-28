@@ -15,6 +15,11 @@ val assess_calling_bluff
   -> claim:Card.t * int
   -> bool
 
+val lie_with_last_card
+  :  win_cycle:(Card.t * int) list
+  -> strategy:Strategy.t
+  -> Strategy.t
+
 val necessary_bluff : game_state:Game_state.t -> (Card.t * int) list
 
 val unecessary_bluff

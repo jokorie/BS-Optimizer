@@ -80,6 +80,12 @@ let end_processes game =
 
 let my_moves game =
   let player = Game_state.whos_turn game in
+  let win_cycle =
+    Util_functions.calc_win_cycle ~me:player ~game_state:game
+  in
+  let strategy = Turn_action.lie_with_last_card ~win_cycle ~strategy:[] in
+  print_s [%message (win_cycle : (Card.t * int) list)];
+  print_s [%message (strategy : Strategy.t)];
   player.hand_size <- player.hand_size - 1;
   print_s [%message "Cards left after move: " (player.hand_size : int)];
   print_endline "I made a move"

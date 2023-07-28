@@ -32,14 +32,14 @@ let game_over t =
     t.all_players
     ~init:false
     ~f:(fun ~key:player_id ~data:(player : Player.t) game_is_over ->
-    match game_is_over with
-    | true -> true
-    | false ->
-      (match player.hand_size = 0 with
-       | true ->
-         print_s [%message "player" (player_id : int) "won the game"];
-         true
-       | false -> false))
+      match game_is_over with
+      | true -> true
+      | false ->
+        (match player.hand_size = 0 with
+         | true ->
+           print_s [%message "player" (player_id : int) "won the game"];
+           true
+         | false -> false))
 ;;
 
 let is_my_turn t =
