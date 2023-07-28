@@ -26,25 +26,24 @@ let chop_win_seq sequence : (Card.t * int) list =
       sequence
       ~init:([], [])
       ~f:(fun (built, pending) (rank, count) ->
-        match count with
-        | 0 -> built, pending @ [ rank, count ]
-        | _ -> built @ pending @ [ rank, count ], [])
+      match count with
+      | 0 -> built, pending @ [ rank, count ]
+      | _ -> built @ pending @ [ rank, count ], [])
   in
   seq
+;;
+
+let my_next_turn ~(me : Player.t) ~(game_state : Game_state.t) =
+  ((game_state.round_num / game_state.player_count * game_state.player_count)
+   + me.id)
+  % game_state.player_count
 ;;
 
 let calc_win_cycle ~(me : Player.t) ~(game_state : Game_state.t) =
   (* id should start at 0 if round starts at 1 *)
   (*Calculates the list of the cards we need to provide according to the
     cards we have in our hand.*)
-  let current_turn =
-    match game_state.round_num % game_state.player_count = me.id with
-    | true -> me.id
-    | false ->
-      match (game_state.round_num % game_state.player_count < me.id) with 
-      | true -> (game_state.round_num % game_state.player_count) - me.id
-      | false -> (game_state.round_num % game_state.player_count) - me.id + game_state.player_count
-  in
+  let current_turn = my_next_turn ~me ~game_state in
   let full_cycle =
     List.init 13 ~f:(fun cycle_count ->
       let rank =
